@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <meta name="author" content="Memory Leak" />
+    <title>Memory Leak - Software Meets Streetwear</title>
+    <meta
+      property="og:title"
+      content="Memory Leak - Software Meets Streetwear"
+    />
+    <meta
+      name="description"
+      content="Shop apparel for programmers, stylish and comfortable. Look cool while you code."
+    />
+    <meta
+      property="og:description"
+      content="Shop apparel for programmers, stylish and comfortable. Look cool while you code."
+    />
+    <link rel="icon" href="./public/favicon.ico" />
+    <link rel="canonical" href="https://www.wearmemoryleak.com/" />
+    <meta property="og:url" content="https://www.wearmemoryleak.com/" />
+    <meta name="robots" content="index, follow" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Memory Leak - Software Meets Streetwear",
+        "url": "https://www.wearmemoryleak.com/"
+      }
+    </script>
+    <script
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="44cf95e1-cb8f-44e5-8c2b-b5af99466996"
+    ></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module">
+      import * as THREE from "three";
+      import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
+
+      const MS_PER_SECOND = 1000;
+      const SECS_PER_MINUTE = 60;
+
+      const THEME_MOBILE_BREAKPOINT_PX = 800;
+      const THEME_IS_ON_MOBILE = window.innerWidth < THEME_MOBILE_BREAKPOINT_PX;
+      const THEME_COLOR_PALETTE_HEX = {
+        primary: 0xeef800,
+        background: 0xf0f0f0,
+        text: 0x000000,
+        muted: 0x808080,
+        subtle: 0xe4e4e4,
+        surface: 0xffffff,
+      };
+      const THEME_TRANSITION_DURATION_MS = MS_PER_SECOND / 3;
+
+      const ANNOUNCEMENT_TICKER_MIN_CLONES = 20;
+      const ANNOUNCEMENT_TICKER_CLONE_WIDTH_PX = 400;
+      const ANOUNCEMENT_TICKER_MINS_PER_CYCLE = 5;
+      const ANNOUNCEMENT_TICKER_TRANSITION_DURATION_MS =
+        MS_PER_SECOND * SECS_PER_MINUTE * ANOUNCEMENT_TICKER_MINS_PER_CYCLE;
+
+      const THREE_SCENE_CAMERA_FOV = 45;
+      const THREE_SCENE_CAMERA_FRUSTUMS = [0.1, 1000]; // near, far
+      const THREE_SCENE_CAMERA_POSITION_M = [
+        THEME_IS_ON_MOBILE ? 50 : 0,
+        THEME_IS_ON_MOBILE ? 85 : 25,
+        window.innerHeight / 2,
+      ]; // x, y, z
+      const THREE_SCENE_NUM_LIGHTS = 25;
+      const THREE_SCENE_ROTATION_SPEED_MPS =
+        0.00175 * (THEME_IS_ON_MOBILE ? 2 : 1);
+
+      const STORE_URL = "https://memory-leak.printful.me";
+      const STORE_ITEMS = [
+        {
+          imageUrls: [
+            "https://cdn.printful.me/t/quick-stores/variants/w339/449174767c3a5130ab5e__825",
+            "https://cdn.printful.me/t/quick-stores/variants/w339/455206667c69d8f8a8d7__825",
+          ],
+          name: '"Pull Request" t-shirt',
+          description: "Make your sacred offering to the divine Maintainer.",
+          price: 29.99,
+          storeLink: `${STORE_URL}/product/pull-request-t-shirt-white`,
+          storeLinksByColor: {
+            black: `${STORE_URL}/product/pull-request-t-shirt`,
+            white: `${STORE_URL}/product/pull-request-t-shirt-white`,
+          },
+        },
+        {
+          imageUrls: [
+            "https://cdn.printful.me/t/quick-stores/variants/w339/448569467c35f9708fab__825",
+            "https://cdn.printful.me/t/quick-stores/variants/w339/448569467c35f9755a2a__825",
+          ],
+          name: '"F" hat',
+          description:
+            "Tell everyone how you're feeling in the nerdiest way possible.",
+          price: 24.99,
+          storeLink: `${STORE_URL}/product/f-hat`,
+        },
+        {
+          imageUrls: [
+            "https://cdn.printful.me/t/quick-stores/variants/w339/450182167c3eb52966e9__825",
+            "https://cdn.printful.me/t/quick-stores/variants/w339/450182167c3eb52d2b5b__825",
+          ],
+          name: '"Bundle Size" hat',
+          description:
+            "Black holes are only slightly heavier than your JS bundle.",
+          price: 24.99,
+          storeLink: `${STORE_URL}/product/bundle-size-hat`,
+        },
+        {
+          imageUrls: [
+            "https://cdn.printful.me/t/quick-stores/variants/w339/455196767c69a288f2a2__825",
+          ],
+          name: "Logo beanie",
+          description: "The only memory-safe skull warmer.",
+          price: 19.99,
+          storeLink: `${STORE_URL}/product/logo-beanie`,
+        },
+        {
+          imageUrls: [
+            "https://cdn.printful.me/t/quick-stores/variants/w339/455213567c6a0487f9fd__825",
+            "https://cdn.printful.me/t/quick-stores/variants/w339/455213567c6a048b1f31__825",
+          ],
+          name: '"sudo" hoodie',
+          description: "At even the slightest inconvenience, say it.",
+          price: 34.99,
+          storeLink: `${STORE_URL}/product/sudo-hoodie`,
+        },
+        {
+          imageUrls: [
+            "https://cdn.printful.me/t/quick-stores/variants/w339/455231267c6a6f37063b__825",
+            "https://cdn.printful.me/t/quick-stores/variants/w339/455231267c6a6f34a011__825",
+          ],
+          name: '"Bare Metal" mug',
+          description: "I bet you thought I was gonna make a Java joke.",
+          price: 12.99,
+          storeLink: `${STORE_URL}/product/bare-metal-mug`,
+        },
+      ];
+
+      // Set CSS mobile styling flag and root theming variables.
+      if (THEME_IS_ON_MOBILE) document.body.classList.add("is-on-mobile");
+      Object.entries(THEME_COLOR_PALETTE_HEX).forEach(
+        ([semanticName, colorHex]) => {
+          document.documentElement.style.setProperty(
+            `--${semanticName}-color`,
+            `#${colorHex.toString(16).padStart(6, "0")}`
+          );
+        }
+      );
+      document.documentElement.style.setProperty(
+        "--transition",
+        `all ${THEME_TRANSITION_DURATION_MS}ms ease-out`
+      );
+      document.documentElement.style.setProperty(
+        "--section-content-max-width",
+        THEME_MOBILE_BREAKPOINT_PX + "px"
+      );
+
+      function _handleHashNavigation() {
+        [...document.querySelectorAll("nav a")].forEach((navLink) => {
+          navLink.classList[
+            window.location.hash === navLink.hash ? "add" : "remove"
+          ]("active");
+        });
+      }
+      _handleHashNavigation();
+      window.addEventListener("hashchange", _handleHashNavigation);
+
+      window.addEventListener("load", () => {
+        const header = document.querySelector("header");
+        const footer = document.querySelector("footer");
+        footer.innerHTML = `<p>© ${new Date().getFullYear()} Memory Leak</p>`;
+
+        const announcementTicker = document.getElementById(
+          "announcement-ticker"
+        );
+        const numAnnouncementClones = Math.max(
+          ANNOUNCEMENT_TICKER_MIN_CLONES,
+          Math.round(window.innerWidth / ANNOUNCEMENT_TICKER_CLONE_WIDTH_PX) *
+            ANOUNCEMENT_TICKER_MINS_PER_CYCLE
+        );
+        for (let i = 0; i < numAnnouncementClones; i++)
+          announcementTicker.firstElementChild.innerHTML +=
+            "New items in the shop<span></span>";
+        const announcementTickerTransitionStyleLeftProp =
+          -ANNOUNCEMENT_TICKER_CLONE_WIDTH_PX * numAnnouncementClones + "px";
+        announcementTicker.firstElementChild.style.transition = `left ${ANNOUNCEMENT_TICKER_TRANSITION_DURATION_MS}ms linear`;
+        announcementTicker.firstElementChild.style.left =
+          announcementTickerTransitionStyleLeftProp;
+        setInterval(() => {
+          announcementTicker.firstElementChild.style.left =
+            announcementTicker.firstElementChild.style.left ===
+            announcementTickerTransitionStyleLeftProp
+              ? `${ANNOUNCEMENT_TICKER_CLONE_WIDTH_PX}px`
+              : announcementTickerTransitionStyleLeftProp;
+        }, ANNOUNCEMENT_TICKER_TRANSITION_DURATION_MS);
+
+        for (const storeItem of STORE_ITEMS) {
+          const itemCard = document.createElement("a");
+          itemCard.dataset.umamiEvent = `clicked-${storeItem.name
+            .toLowerCase()
+            .replaceAll('"', "")
+            .replaceAll(" ", "-")}-item-link`;
+          itemCard.classList.add("store-item-card");
+          itemCard.href = storeItem.storeLink;
+          itemCard.innerHTML = `
+                  <div class="w-100">
+                    <img
+                      class="img-cover"
+                      src="${storeItem.imageUrls[0]}"
+                      alt="${storeItem.name} mockup"
+                    />
+                  </div>
+                  ${
+                    typeof storeItem.storeLinksByColor !== "undefined"
+                      ? `
+                          <div class="flex centered">
+                            ${Object.entries(storeItem.storeLinksByColor)
+                              .map(
+                                ([color, storeLink]) => `
+                                <a
+                                  class="store-item-card-color"
+                                  href="${storeLink}"
+                                  style="background-color: ${color};"
+                                ></a>
+                              `
+                              )
+                              .join("")}
+                          </div>
+                        `
+                      : ""
+                  }
+                  <p>${storeItem.name}</p>
+                  <span>${storeItem.description}</span>
+                  <div class="flex align-center justify-between w-100">
+                    <p>$${storeItem.price}</p>
+                    <a>View details</a>
+                  </div>
+                `;
+          if (storeItem.imageUrls.length > 1) {
+            itemCard.addEventListener("mouseenter", () => {
+              itemCard.querySelector("img").src = storeItem.imageUrls[1];
+            });
+            itemCard.addEventListener("mouseleave", () => {
+              itemCard.querySelector("img").src = storeItem.imageUrls[0];
+            });
+          }
+          itemCard.addEventListener("click", () => {
+            window.location.href = storeItem.storeLink;
+          });
+          document.getElementById("shop").appendChild(itemCard);
+        }
+        // [...document.querySelectorAll("a[href='#shop']")].forEach(
+        //   (shopLink) => {
+        //     shopLink.href = STORE_URL;
+        //   }
+        // );
+
+        // Create a rotating metallic brain.
+        const canvas = document.querySelector("canvas");
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(THEME_COLOR_PALETTE_HEX.background);
+        scene.rotation.y = Math.PI / 4;
+        const camera = new THREE.PerspectiveCamera(
+          THREE_SCENE_CAMERA_FOV,
+          window.innerWidth / window.innerHeight,
+          THREE_SCENE_CAMERA_FRUSTUMS[0],
+          THREE_SCENE_CAMERA_FRUSTUMS[1]
+        );
+        THREE_SCENE_CAMERA_POSITION_M.forEach((value, i) => {
+          camera.position.setComponent(i, value);
+        });
+        const renderer = new THREE.WebGLRenderer({
+          canvas,
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        for (let i = 0; i < THREE_SCENE_NUM_LIGHTS; i++) {
+          const light = new THREE.DirectionalLight(
+            THEME_COLOR_PALETTE_HEX.surface
+          );
+          light.position.set(
+            Math.random() * 100 - 50,
+            Math.random() * 100 - 50,
+            Math.random() * 100 - 50
+          );
+          scene.add(light);
+        }
+        const fbxLoader = new FBXLoader();
+        fbxLoader.load("./public/brain-model.fbx", (fbx) => {
+          fbx.position.set(0, 0, 0);
+          fbx.traverse((child) => {
+            if (child.isMesh) {
+              child.material = new THREE.MeshStandardMaterial({
+                color: THEME_COLOR_PALETTE_HEX.surface,
+                metalness: 1,
+                roughness: 1,
+              });
+            }
+          });
+          scene.add(fbx);
+        });
+        function render() {
+          requestAnimationFrame(render);
+          scene.rotation.y -= THREE_SCENE_ROTATION_SPEED_MPS;
+          renderer.render(scene, camera);
+        }
+        render();
+
+        // Animate the webpage in on load.
+        setTimeout(() => {
+          const elementsToAnimate = [
+            canvas,
+            ...document.querySelectorAll("#hero *"),
+            document.querySelector("header"),
+            document.getElementById("shop"),
+            document.getElementById("about"),
+          ];
+          elementsToAnimate.forEach((element, i) => {
+            if (i > 0) {
+              const transitionDelayMs = i * (THEME_TRANSITION_DURATION_MS / 2);
+              element.style.transitionDelay = transitionDelayMs + "ms";
+              setTimeout(() => {
+                element.style.transitionDelay = "unset";
+              }, transitionDelayMs);
+            }
+            ["opacity", "transform"].forEach((style) => {
+              element.style[style] = "unset";
+            });
+          });
+        }, MS_PER_SECOND / 4);
+      });
+    </script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+
+      :root {
+        --primary-color: "";
+        --background-color: "";
+        --text-color: "";
+        --muted-color: "";
+        --surface-color: "";
+        --base-spacing: 8px;
+        --base-font-size: 16px;
+        --font-size-sm: calc(var(--base-font-size) * 0.8);
+        --border: 1px solid var(--subtle-color);
+        --border-radius: 20px;
+        --disabled-opacity: 0.75;
+        --transition: "";
+
+        --section-content-max-width: "";
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        width: 100%;
+        min-height: 100svh;
+        margin: unset;
+        padding: unset;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        font-family: "JetBrains Mono", Arial, sans-serif;
+        font-size: var(--base-font-size);
+        overflow-x: hidden;
+      }
+      body::-webkit-scrollbar {
+        display: none;
+      }
+      * {
+        box-sizing: border-box;
+        margin: unset;
+      }
+      *:focus {
+        outline: none;
+      }
+      h1,
+      h2 {
+        margin-bottom: calc(var(--base-spacing) * 2);
+        line-height: 1.1;
+        font-weight: normal;
+      }
+      p {
+        line-height: 1.4;
+      }
+      a {
+        color: purple;
+        text-decoration: none;
+      }
+      a:active {
+        opacity: var(--disabled-opacity);
+        transition: unset;
+      }
+      button {
+        padding: calc(var(--base-spacing) * 1.75) calc(var(--base-spacing) * 4);
+        background-color: var(--text-color);
+        color: var(--primary-color);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: bold;
+        border: none;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        cursor: pointer;
+      }
+      button:active {
+        transform: scale(0.975) !important;
+        transition: unset !important;
+      }
+      header {
+        padding: calc(var(--base-spacing) * 4);
+      }
+      header nav a {
+        margin-left: calc(var(--base-spacing) * 3);
+        color: var(--muted-color);
+        text-transform: uppercase;
+        transition: var(--transition);
+      }
+      header nav a.active {
+        color: var(--text-color);
+      }
+      footer {
+        padding: calc(var(--base-spacing) * 2) calc(var(--base-spacing) * 4);
+        color: var(--muted-color);
+        font-size: var(--font-size-sm);
+      }
+      section {
+        width: 100%;
+        padding: calc(var(--base-spacing) * 4);
+      }
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw !important;
+        height: 100svh !important;
+        z-index: -1;
+      }
+
+      #announcement-ticker {
+        position: relative;
+        width: 100%;
+        height: 25px;
+        background-color: var(--text-color);
+        overflow: hidden;
+      }
+      #announcement-ticker p {
+        position: absolute;
+        left: var(--base-spacing);
+        color: var(--primary-color);
+        font-size: var(--font-size-sm);
+        text-transform: uppercase;
+        text-wrap: nowrap;
+      }
+      #announcement-ticker p span {
+        display: inline-block;
+        vertical-align: middle;
+        width: 4px;
+        height: 4px;
+        margin: 0 calc(var(--base-spacing) * 2);
+        background-color: var(--primary-color);
+        border-radius: var(--border-radius);
+      }
+
+      #hero {
+        max-width: var(--section-content-max-width);
+        margin: 0 auto;
+      }
+      #hero h1,
+      #hero p {
+        color: var(--surface-color);
+        mix-blend-mode: difference;
+      }
+      #hero h1 {
+        font-size: calc(var(--base-font-size) * 3);
+        text-transform: uppercase;
+      }
+      #hero button {
+        margin-top: calc(var(--base-spacing) * 4);
+      }
+
+      #shop {
+        margin-top: calc(var(--base-spacing) * 10);
+      }
+      .store-item-card {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+        height: 425px;
+        margin: calc(var(--base-spacing) * 4);
+        padding: calc(var(--base-spacing) * 3);
+        color: var(--text-color);
+        border: var(--border);
+        border-radius: var(--border-radius);
+        cursor: pointer;
+      }
+      .store-item-card div:first-of-type {
+        height: 70%;
+        margin-bottom: calc(var(--base-spacing) * 2);
+      }
+      .store-item-card-color {
+        width: 12px;
+        height: 12px;
+        margin: calc(var(--base-spacing) * -2) calc(var(--base-spacing) / 2)
+          var(--base-spacing);
+        border: var(--border);
+        border-radius: var(--border-radius);
+      }
+      .store-item-card-color:hover {
+        transform: scale(1.15);
+      }
+      .store-item-card span {
+        margin-top: calc(var(--base-spacing) / 2);
+        color: var(--muted-color);
+      }
+      .store-item-card span,
+      .store-item-card a {
+        font-size: var(--font-size-sm);
+      }
+      .store-item-card div:last-of-type {
+        margin-top: calc(var(--base-spacing) * 2);
+      }
+
+      #about {
+        max-width: var(--section-content-max-width);
+        margin: 0 auto;
+      }
+      #about p {
+        margin-bottom: calc(var(--base-spacing) * 1.5);
+      }
+      #about p:last-of-type {
+        margin-top: calc(var(--base-spacing) * 1.5);
+        padding-top: calc(var(--base-spacing) * 3);
+        border-top: var(--border);
+      }
+
+      /* Elements to animate in on load. */
+      canvas,
+      #hero *,
+      header,
+      #shop,
+      #about {
+        opacity: 0;
+        transition: var(--transition);
+      }
+      canvas,
+      #hero button {
+        transform: translateY(5svh) scale(0.95);
+        transition: all 2s cubic-bezier(0.24, 1.8, 0.24, 1);
+      }
+
+      /* Utility classes */
+      .flex {
+        display: flex;
+      }
+      .centered {
+        justify-content: center;
+        align-items: center;
+      }
+      .align-start {
+        align-items: flex-start;
+      }
+      .align-center {
+        align-items: center;
+      }
+      .align-end {
+        align-items: flex-end;
+      }
+      .align-between {
+        align-items: space-between;
+      }
+      .justify-start {
+        justify-content: flex-start;
+      }
+      .justify-center {
+        justify-content: center;
+      }
+      .justify-end {
+        justify-content: flex-end;
+      }
+      .justify-between {
+        justify-content: space-between;
+      }
+      .column {
+        flex-direction: column;
+      }
+      .wrap {
+        flex-wrap: wrap;
+      }
+      .w-100 {
+        width: 100%;
+      }
+      .h-100 {
+        height: 100%;
+      }
+      .img-cover {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+      }
+
+      .is-on-mobile {
+        button {
+          padding: calc(var(--base-spacing) * 1.5) calc(var(--base-spacing) * 4);
+        }
+        header {
+          align-items: flex-start;
+          padding: calc(var(--base-spacing) * 2);
+        }
+        section {
+          align-items: flex-start;
+          padding-left: calc(var(--base-spacing) * 2);
+          padding-right: calc(var(--base-spacing) * 2);
+        }
+        canvas {
+          top: -50px;
+        }
+        #hero button {
+          margin-top: calc(var(--base-spacing) * 2);
+        }
+        .store-item-card {
+          max-width: unset;
+          margin: calc(var(--base-spacing) * 2) 0;
+        }
+
+        /* Mobile utility classes */
+        .hide-on-mobile {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas></canvas>
+    <div id="announcement-ticker" class="flex centered"><p></p></div>
+    <header class="flex justify-between w-100">
+      <a href="#hero" data-umami-event="clicked-navbar-hero-section-link">
+        <img
+          width="75"
+          src="./public/logo/logo_metallic.png"
+          alt="Memory Leak logo"
+        />
+      </a>
+      <nav>
+        <a href="#shop" data-umami-event="clicked-navbar-shop-section-link">
+          Shop
+        </a>
+        <a href="#about" data-umami-event="clicked-navbar-about-section-link">
+          About
+        </a>
+      </nav>
+    </header>
+    <main>
+      <section id="hero" class="flex centered column">
+        <h1>Software Meets Streetwear</h1>
+        <p>
+          Apparel for programmers, stylish and comfortable. Look cool while you
+          code.
+        </p>
+        <a href="#shop" data-umami-event="clicked-hero-section-cta">
+          <button>Shop now</button>
+        </a>
+      </section>
+      <section id="shop" class="flex centered wrap"></section>
+      <section id="about" class="flex centered column">
+        <h1>Programmers can look cool too, you know.</h1>
+        <p>
+          I wanted to express my passion for programming in a way that fit my
+          style, but all I found were gag gifts and tacky t-shirts. So I started
+          Memory Leak.
+        </p>
+        <p>
+          Drawing inspiration from the beauty of code and the all that comes
+          with writing it, Memory Leak is apparel that's not only comfortable,
+          but stylish.
+        </p>
+        <p>
+          For help with an order or to say 👋 email
+          <a
+            href="mailto:wearmemoryleak@gmail.com>"
+            data-umami-event="clicked-contact-section-email-button"
+          >
+            wearmemoryleak@gmail.com
+          </a>
+        </p>
+      </section>
+    </main>
+    <footer class="flex centered w-100"></footer>
+  </body>
+</html>
