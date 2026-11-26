@@ -14,22 +14,22 @@
     />
     <meta
       name="description"
-      content="Headwear inspired by software. Embroidered corduroy caps and a beanie. Just hats."
+      content="Shop headwear inspired by software, stylish and comfortable. Look cool while you code."
     />
     <meta
       property="og:description"
-      content="Headwear inspired by software. Embroidered corduroy caps and a beanie. Just hats."
+      content="Shop headwear inspired by software, stylish and comfortable. Look cool while you code."
     />
     <link rel="icon" href="./public/favicon.ico" />
-    <link rel="canonical" href="https://www.wearmemoryleak.com/" />
-    <meta property="og:url" content="https://www.wearmemoryleak.com/" />
+    <link rel="canonical" href="https://www.memoryleakhats.com/" />
+    <meta property="og:url" content="https://www.memoryleakhats.com/" />
     <meta name="robots" content="index, follow" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "Memory Leak - Headwear Inspired by Software",
-        "url": "https://www.wearmemoryleak.com/"
+        "url": "https://www.memoryleakhats.com/"
       }
     </script>
     <script
@@ -98,8 +98,8 @@
           name: '"F" hat',
           description:
             "Tell everyone how you're feeling in the nerdiest way possible.",
-          price: 24.99,
-          colors: ["black"],
+          price: 32,
+          colors: ["black", "olive"],
           storeLink: `${STORE_URL}/product/f-hat`,
         },
         {
@@ -110,19 +110,9 @@
           name: '"Bundle Size" hat',
           description:
             "Black holes are only slightly heavier than your JS bundle.",
-          price: 24.99,
-          colors: ["olive"],
+          price: 32,
+          colors: ["olive", "black"],
           storeLink: `${STORE_URL}/product/bundle-size-hat`,
-        },
-        {
-          imageUrls: [
-            "https://cdn.printful.me/t/quick-stores/variants/w339/455196767c69a288f2a2__825",
-          ],
-          name: "Logo beanie",
-          description: "The only memory-safe skull warmer.",
-          price: 19.99,
-          colors: ["black"],
-          storeLink: `${STORE_URL}/product/logo-beanie`,
         },
       ];
 
@@ -170,7 +160,7 @@
         );
         for (let i = 0; i < numAnnouncementClones; i++)
           announcementTicker.firstElementChild.innerHTML +=
-            "Now exclusively hats<span></span>";
+            "New items in the shop<span></span>";
         const announcementTickerTransitionStyleLeftProp =
           -ANNOUNCEMENT_TICKER_CLONE_WIDTH_PX * numAnnouncementClones + "px";
         announcementTicker.firstElementChild.style.transition = `left ${ANNOUNCEMENT_TICKER_TRANSITION_DURATION_MS}ms linear`;
@@ -638,8 +628,8 @@
       <section id="hero" class="flex centered column">
         <h1>Headwear Inspired by Software</h1>
         <p>
-          We make hats. Just hats. Each one is a reference you'll either get or
-          you won't.
+          Headwear for programmers, stylish and comfortable. Look cool while you
+          code.
         </p>
         <a href="#shop" data-umami-event="clicked-hero-section-cta">
           <button>Shop now</button>
@@ -647,15 +637,16 @@
       </section>
       <section id="shop" class="flex centered wrap"></section>
       <section id="about" class="flex centered column">
-        <h1>It's a hat company.</h1>
+        <h1>Programmers can look cool too, you know.</h1>
         <p>
-          Memory Leak makes headwear inspired by software. That is the entire
-          business.
+          I wanted to express my passion for programming in a way that fit my
+          style, but all I found were gag gifts and tacky t-shirts. So I started
+          Memory Leak.
         </p>
         <p>
-          I wanted something that nodded to the work without announcing it
-          across my chest, and all I found were gag gifts and tacky t-shirts. So
-          now there are hats.
+          Drawing inspiration from the beauty of code and the all that comes
+          with writing it, Memory Leak is headwear that's not only comfortable,
+          but stylish.
         </p>
         <p>
           For help with an order or to say 👋 email
